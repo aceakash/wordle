@@ -18,6 +18,7 @@ func main() {
 	}
 	ui := NewUI(os.Stdin, os.Stdout, os.Stderr)
 
+	solved := false
 	for i := 0; i < 6; i++ {
 		err = ui.RenderGameState(game)
 		if err != nil {
@@ -28,19 +29,19 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		//fmt.Println("===", guess, game.Secret(), guess == game.Secret(), "===")
+		fmt.Println("===", guess, game.Secret(), guess == game.Secret(), "===")
+		game.RegisterGuess(guess)
 		if guess == game.Secret() {
-			//fmt.Println("in")
-			err := ui.GameSolved()
-			if err != nil {
-				panic(err)
-			}
+			solved = true
 			break
 		}
-		game.RegisterGuess(guess)
 	}
 	ui.RenderGameState(game)
-	ui.NotSolved(game.Secret())
+	if !solved {
+		ui.NotSolved(game.Secret())
+	} else {
+		ui.GameSolved()
+	}
 }
 
 type UI struct {
