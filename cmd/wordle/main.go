@@ -29,7 +29,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("===", guess, game.Secret(), guess == game.Secret(), "===")
+		//fmt.Println("===", guess, game.Secret(), guess == game.Secret(), "===")
 		game.RegisterGuess(guess)
 		if guess == game.Secret() {
 			solved = true
