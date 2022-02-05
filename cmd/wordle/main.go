@@ -19,12 +19,17 @@ func main() {
 	ui := NewUI(os.Stdin, os.Stdout, os.Stderr)
 
 	solved := false
-	for i := 0; i < 6; i++ {
+	guessCount := 0
+	for guessCount < 6 {
 		err = ui.RenderGameState(game)
 		if err != nil {
 			panic(err)
 		}
 		guess, err := ui.GetGuessFromUser()
+		if !game.isGuessValid(guess) {
+			ui.InvalidGuess()
+			continue
+		}
 		//fmt.Println("guess", guess)
 		if err != nil {
 			panic(err)
@@ -35,6 +40,7 @@ func main() {
 			solved = true
 			break
 		}
+		guessCount++
 	}
 	ui.RenderGameState(game)
 	if !solved {
@@ -104,6 +110,10 @@ func (ui UI) NotSolved(secret string) {
 	fmt.Fprintf(ui.out, "Unlucky, the word was %s\n", secret)
 }
 
+func (ui UI) InvalidGuess() {
+	fmt.Fprintln(ui.out, "5-letter guesses only, please")
+}
+
 func NewUI(in io.Reader, out, err io.Writer) UI {
 	return UI{out, in, err}
 }
@@ -166,6 +176,10 @@ func (g *Game) generateClue(guess string) Clue {
 		})
 	}
 	return clue
+}
+
+func (g *Game) isGuessValid(guess string) bool {
+	return len(guess) == 5
 }
 
 func NewGame() (*Game, error) {
