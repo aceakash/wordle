@@ -17,6 +17,7 @@ func main() {
 		panic(err)
 	}
 	ui := NewUI(os.Stdin, os.Stdout, os.Stderr)
+	ui.MessageUser("You're guessing a 5-letter word.")
 
 	solved := false
 	guessCount := 0
@@ -111,7 +112,11 @@ func (ui UI) NotSolved(secret string) {
 }
 
 func (ui UI) InvalidGuess() {
-	fmt.Fprintln(ui.out, "5-letter guesses only, please")
+	fmt.Fprintln(ui.out, "Uh oh, not one of the allowed 5-letter words!")
+}
+
+func (ui *UI) MessageUser(msg string) {
+	fmt.Fprintln(ui.out, msg)
 }
 
 func NewUI(in io.Reader, out, err io.Writer) UI {
@@ -119,9 +124,10 @@ func NewUI(in io.Reader, out, err io.Writer) UI {
 }
 
 type Game struct {
-	secret  string
-	guesses []string
-	clues   []Clue
+	secret         string
+	guesses        []string
+	clues          []Clue
+	allowedGuesses []string
 }
 
 func (g *Game) Secret() string {
@@ -179,7 +185,17 @@ func (g *Game) generateClue(guess string) Clue {
 }
 
 func (g *Game) isGuessValid(guess string) bool {
-	return len(guess) == 5
+	return len(guess) == 5 && g.isAllowedGuess(guess)
+}
+
+func (g *Game) isAllowedGuess(guess string) bool {
+	for _, allowedGuess := range g.allowedGuesses {
+		//fmt.Printf(`"%s", "%s"\n`, guess, allowedGuess)
+		if guess == allowedGuess {
+			return true
+		}
+	}
+	return false
 }
 
 func NewGame() (*Game, error) {
@@ -187,12 +203,38 @@ func NewGame() (*Game, error) {
 	if err != nil {
 		return &Game{}, err
 	}
+	allowedGuesses, err := getAllowedGuesses()
+	if err != nil {
+		return &Game{}, err
+	}
 	game := &Game{
 		secret,
 		[]string{},
 		[]Clue{},
+		allowedGuesses,
 	}
 	return game, nil
+}
+
+func getAllowedGuesses() ([]string, error) {
+	bytes, err := os.ReadFile("wordle-allowed-guesses.txt")
+	if err != nil {
+		return nil, err
+	}
+	allowedRaw := strings.Split(string(bytes), "\n")
+
+	bytes2, err := os.ReadFile("wordle-answers-alphabetical.txt")
+	if err != nil {
+		return nil, err
+	}
+	answersRaw := strings.Split(string(bytes2), "\n")
+
+	words3 := []string{}
+	words3 = append(words3, allowedRaw...)
+	words3 = append(words3, answersRaw...)
+
+	fmt.Println(contains(words3, "cater"))
+	return words3, nil
 }
 
 func pickSecret() (string, error) {
@@ -203,4 +245,13 @@ func pickSecret() (string, error) {
 	}
 	words := strings.Split(string(bytes), "\n")
 	return words[rand.Intn(len(words))], nil
+}
+
+func contains(haystack []string, needle string) bool {
+	for _, s := range haystack {
+		if s == needle {
+			return true
+		}
+	}
+	return false
 }
