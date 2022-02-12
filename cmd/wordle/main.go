@@ -29,7 +29,7 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 		return err
 	}
 
-	fmt.Fprintf(out, "")
+	fmt.Fprintf(out, "\nI have chosen a 5-letter secret word.\nYou have 6 guesses to uncover it. Go!\n")
 	if secret == "" {
 		secret, err = secretPicker.PickSecret()
 		if err != nil {
