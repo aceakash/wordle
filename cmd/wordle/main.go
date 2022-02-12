@@ -20,7 +20,7 @@ func main() {
 }
 
 func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
-
+	fmt.Fprintf(out, "")
 	game, err := internal.NewGame(secret)
 	if err != nil {
 		panic(err)
@@ -28,7 +28,12 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 
 	var guess string
 
-	for i := 0; i < 6; i++ {
+	maxGuesses := 6
+	for i := 0; i < maxGuesses; i++ {
+		_, err := fmt.Fprintf(out, "\nGuess (%d of %d) ? ", i+1, maxGuesses)
+		if err != nil {
+			return err
+		}
 		_, err = fmt.Fscanln(in, &guess)
 		if err != nil {
 			return err
