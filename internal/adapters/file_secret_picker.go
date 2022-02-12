@@ -1,10 +1,5 @@
 package adapters
 
-import (
-	"os"
-	"strings"
-)
-
 type IRandomIntPicker interface {
 	PickRandomInt(upto int) int
 }
@@ -15,11 +10,10 @@ type FileSecretPicker struct {
 }
 
 func (f FileSecretPicker) PickSecret() (string, error) {
-	bytes, err := os.ReadFile(f.filePath)
+	words, err := ReadWordsFromFile(f.filePath)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
-	words := strings.Split(string(bytes), "\n")
 	index := f.randomIntPicker.PickRandomInt(len(words))
 	return words[index], nil
 }

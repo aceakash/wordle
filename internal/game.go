@@ -2,18 +2,24 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
-func NewGame(secret string) (*Game, error) {
+type AllowedGuessChecker interface {
+	IsGuessAllowed(guess string) bool
+}
+
+func NewGame(secret string, allowedGuessChecker AllowedGuessChecker) (*Game, error) {
 	if secret == "" {
 		return nil, errors.New("secret must be a 5-letter word")
 	}
-	return &Game{secret: strings.ToUpper(secret)}, nil
+	return &Game{secret: strings.ToUpper(secret), guessChecker: allowedGuessChecker}, nil
 }
 
 type Game struct {
-	secret string
+	secret       string
+	guessChecker AllowedGuessChecker
 }
 
 type ClueResult string
@@ -42,8 +48,11 @@ func (gr GuessResult) IsCorrectAnswer() bool {
 	return true
 }
 
-func (g *Game) Guess(guess string) GuessResult {
+func (g *Game) Guess(guess string) (GuessResult, error) {
 	guess = strings.ToUpper(guess)
+	if !g.guessChecker.IsGuessAllowed(guess) {
+		return GuessResult{}, fmt.Errorf("%s is not a 5-letter word known to me", guess)
+	}
 
 	res := GuessResult{}
 	for i := 0; i < 5; i++ {
@@ -60,5 +69,5 @@ func (g *Game) Guess(guess string) GuessResult {
 		}
 		res.Clues[i] = clue
 	}
-	return res
+	return res, nil
 }
