@@ -18,6 +18,15 @@ func main() {
 }
 
 func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
-	_, err := fmt.Fprintln(out, secret)
+	var guess string
+	_, err := fmt.Fscanln(in, &guess)
+	if err != nil {
+		return err
+	}
+	if guess == secret {
+		_, err = fmt.Fprintln(out, "Correct")
+		return err
+	}
+	_, err = fmt.Fprintf(out, "Wrong, the word was %s\n", secret)
 	return err
 }
