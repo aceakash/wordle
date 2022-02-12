@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/aceakash/wordle/internal"
 	"io"
 	"os"
 )
@@ -18,12 +19,17 @@ func main() {
 }
 
 func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
+
+	game := internal.NewGame(secret)
+
 	var guess string
 	_, err := fmt.Fscanln(in, &guess)
 	if err != nil {
 		return err
 	}
-	if guess == secret {
+
+	res := game.Guess(guess[:len(guess)-1])
+	if res.Solved {
 		_, err = fmt.Fprintln(out, "Correct")
 		return err
 	}
