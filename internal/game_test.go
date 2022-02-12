@@ -18,113 +18,34 @@ func TestGame_CorrectLettersAreMarked(t *testing.T) {
 		g, _ := i.NewGame("folds")
 		res := g.Guess("freak")
 
-		expectedClues := [5]i.Clue{i.Clue{
-			Letter: 'F',
-			Result: i.Correct,
-		},
-			i.Clue{
-				Letter: 'R',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'E',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'A',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'K',
-				Result: i.Wrong,
-			},
-		}
-		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+		expectedClue := i.Clue{Letter: 'F', Result: i.Correct,}
+		assert.Equal(t, expectedClue, res.Clues[0])
 	})
 
 	t.Run("third letter only", func(t *testing.T) {
 		g, _ := i.NewGame("folds")
 		res := g.Guess("ruler")
 
-		expectedClues := [5]i.Clue{i.Clue{
-			Letter: 'R',
-			Result: i.Wrong,
-		},
-			i.Clue{
-				Letter: 'U',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'L',
-				Result: i.Correct,
-			},
-			i.Clue{
-				Letter: 'E',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'R',
-				Result: i.Wrong,
-			},
-		}
-		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+		expectedClue := i.Clue{Letter: 'L', Result: i.Correct,}
+		assert.Equal(t, expectedClue, res.Clues[2])
 	})
 
 	t.Run("fifth letter only", func(t *testing.T) {
 		g, _ := i.NewGame("folds")
-		res := g.Guess("runes")
+		res := g.Guess("trees")
 
-		expectedClues := [5]i.Clue{i.Clue{
-			Letter: 'R',
-			Result: i.Wrong,
-		},
-			i.Clue{
-				Letter: 'U',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'N',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'E',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'S',
-				Result: i.Correct,
-			},
-		}
-		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+		expectedClue := i.Clue{Letter: 'S', Result: i.Correct,}
+		assert.Equal(t, expectedClue, res.Clues[4])
 	})
 
 	t.Run("first and fifth letters only", func(t *testing.T) {
 		g, _ := i.NewGame("folds")
 		res := g.Guess("frees")
 
-		expectedClues := [5]i.Clue{i.Clue{
-			Letter: 'F',
-			Result: i.Correct,
-		},
-			i.Clue{
-				Letter: 'R',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'E',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'E',
-				Result: i.Wrong,
-			},
-			i.Clue{
-				Letter: 'S',
-				Result: i.Correct,
-			},
-		}
-		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
-
+		expectedFirstClue := i.Clue{Letter: 'F', Result: i.Correct,}
+		expectedFifthClue := i.Clue{Letter: 'S', Result: i.Correct,}
+		assert.Equal(t, expectedFirstClue, res.Clues[0])
+		assert.Equal(t, expectedFifthClue, res.Clues[4])
 	})
 
 	t.Run("all correct", func(t *testing.T) {
@@ -155,4 +76,8 @@ func TestGame_CorrectLettersAreMarked(t *testing.T) {
 		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
 
 	})
+}
+
+func TestGame_MisplacedLettersAreMarked(t *testing.T) {
+	
 }
