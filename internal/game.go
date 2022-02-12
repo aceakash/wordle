@@ -15,6 +15,7 @@ func NewGame(secret string) (*Game, error) {
 type Game struct {
 	secret string
 }
+
 type ClueResult string
 
 const (
@@ -29,8 +30,16 @@ type Clue struct {
 }
 
 type GuessResult struct {
-	Solved bool
-	Clues  [5]Clue
+	Clues [5]Clue
+}
+
+func (gr GuessResult) IsCorrectAnswer() bool {
+	for _, clue := range gr.Clues {
+		if !(clue.Result == Correct) {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Game) Guess(guess string) GuessResult {

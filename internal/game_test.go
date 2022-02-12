@@ -73,7 +73,7 @@ func TestGame_CorrectLettersAreMarked(t *testing.T) {
 				Result: i.Correct,
 			},
 		}
-		assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+		assert.Equal(t, i.GuessResult{Clues: expectedClues}, res)
 
 	})
 }
