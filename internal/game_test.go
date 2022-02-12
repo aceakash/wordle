@@ -141,3 +141,16 @@ func TestGame_WrongLettersAreMarked(t *testing.T) {
 		assert.Equal(t, i.Clue{Letter: 'S', Result: i.Wrong}, res.Clues[4])
 	})
 }
+
+func TestClueOnlyGivenOnce_IfLetterInSecretOnce(t *testing.T) {
+	t.Run("guess LEASE for secret AISLE should only show one correct E", func(t *testing.T) {
+		g, _ := i.NewGame("AISLE", StubAllowedGuessChecker{})
+		res, _ := g.Guess("LEASE")
+
+		expectedSecondLetter := i.Clue{Letter: 'E', Result: i.Wrong}
+		assert.Equal(t, expectedSecondLetter, res.Clues[1])
+
+		expectedLastLetter := i.Clue{Letter: 'E', Result: i.Correct}
+		assert.Equal(t, expectedLastLetter, res.Clues[4])
+	})
+}
