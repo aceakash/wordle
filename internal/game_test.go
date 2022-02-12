@@ -13,31 +13,59 @@ func TestNewGame(t *testing.T) {
 	})
 }
 
-func TestGame_ShowSolvedOrNotAfterFirstGuess(t *testing.T) {
-	t.Run("when first guess is wrong", func(t *testing.T) {
-		g, _ := i.NewGame("cater")
-		res := g.Guess("bravo")
-
-		assert.Equal(t, i.GuessResult{Solved: false}, res)
-	})
-
-	t.Run("when first guess is right", func(t *testing.T) {
-		g, _ := i.NewGame("cater")
-		res := g.Guess("cater")
-
-		assert.Equal(t, i.GuessResult{Solved: true}, res)
-	})
-
-}
-
 func TestGame_WhenOnlyFirstLetterIsCorrect(t *testing.T) {
 	g, _ := i.NewGame("folds")
 	res := g.Guess("freak")
 
-	expectedFirstClue := i.Clue{
-		Letter: "F",
+	expectedClues := [5]i.Clue{i.Clue{
+		Letter: 'F',
 		Result: i.Correct,
+	},
+		i.Clue{
+			Letter: 'R',
+			Result: i.Wrong,
+		},
+		i.Clue{
+			Letter: 'E',
+			Result: i.Wrong,
+		},
+		i.Clue{
+			Letter: 'A',
+			Result: i.Wrong,
+		},
+		i.Clue{
+			Letter: 'K',
+			Result: i.Wrong,
+		},
 	}
-	expectedClues := [5]i.Clue{expectedFirstClue}
 	assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+}
+
+func Test_WhenGuessIsCorrectOnFirstTry(t *testing.T) {
+	g, _ := i.NewGame("folds")
+	res := g.Guess("folds")
+
+	expectedClues := [5]i.Clue{i.Clue{
+		Letter: 'F',
+		Result: i.Correct,
+	},
+		i.Clue{
+			Letter: 'O',
+			Result: i.Correct,
+		},
+		i.Clue{
+			Letter: 'L',
+			Result: i.Correct,
+		},
+		i.Clue{
+			Letter: 'D',
+			Result: i.Correct,
+		},
+		i.Clue{
+			Letter: 'S',
+			Result: i.Correct,
+		},
+	}
+	assert.Equal(t, i.GuessResult{Solved: false, Clues: expectedClues}, res)
+
 }

@@ -8,6 +8,7 @@ import (
 )
 
 func TestWhenFirstGuessIsCorrect(t *testing.T) {
+	t.SkipNow()
 	var stdout bytes.Buffer
 	secret := "cater"
 	stdin := strings.NewReader(secret)
@@ -19,6 +20,7 @@ func TestWhenFirstGuessIsCorrect(t *testing.T) {
 }
 
 func TestWhenFirstGuessIsWrong(t *testing.T) {
+	t.SkipNow()
 	var stdout bytes.Buffer
 	secret := "cater"
 	stdin := strings.NewReader("guess")

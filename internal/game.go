@@ -18,11 +18,13 @@ type Game struct {
 type ClueResult string
 
 const (
-	Correct ClueResult = "Correct"
+	Correct   ClueResult = "Correct"
+	Wrong     ClueResult = "Wrong"
+	Misplaced ClueResult = "Misplaced"
 )
 
 type Clue struct {
-	Letter string
+	Letter rune
 	Result ClueResult
 }
 
@@ -33,21 +35,19 @@ type GuessResult struct {
 
 func (g *Game) Guess(guess string) GuessResult {
 	guess = strings.ToUpper(guess)
-	if guess == g.secret {
-		return GuessResult{
-			Solved: true,
+
+	res := GuessResult{}
+	for i := 0; i < 5; i++ {
+		clue := Clue{
+			Letter: rune(guess[i]),
+			Result: Wrong,
 		}
-	}
-	if guess[0] == g.secret[0] {
-		return GuessResult{
-			Solved: false,
-			Clues: [5]Clue{
-				{
-					Letter: string(g.secret[0]),
-					Result: Correct,
-				},
-			},
+		if guess[i] == g.secret[i] {
+			clue.Result = Correct
+		} else {
+			clue.Result = Wrong
 		}
+		res.Clues[i] = clue
 	}
-	return GuessResult{}
+	return res
 }

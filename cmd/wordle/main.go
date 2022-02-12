@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aceakash/wordle/internal"
+	"github.com/fatih/color"
 	"io"
 	"os"
 )
@@ -32,15 +33,26 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 	}
 
 	res := game.Guess(guess)
-	if res.Solved {
-		_, err = fmt.Fprintln(out, "Correct")
-		return err
+	return renderClues(res.Clues, out)
+}
+
+func renderClues(clues [5]internal.Clue, stdout io.Writer) error {
+	correct := color.New(color.BgGreen, color.FgHiBlack)
+	incorrect := color.New(color.BgHiBlack, color.FgWhite)
+	for i := 0; i < 5; i++ {
+		format := " %c "
+		if clues[i].Result == internal.Correct {
+			_, err := correct.Fprintf(stdout, format, clues[i].Letter)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+		_, err := incorrect.Fprintf(stdout, format, clues[i].Letter)
+		if err != nil {
+			return err
+		}
 	}
-	//fmt.Println("====res", res)
-	if res.Clues[0].Result == internal.Correct {
-		_, err = fmt.Fprintln(out, "First letter is correct")
-		return err
-	}
-	_, err = fmt.Fprintf(out, "Wrong, the word was %s\n", secret)
-	return err
+	return nil
+	//yellow := color.New(color.BgYellow)
 }
