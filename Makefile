@@ -2,13 +2,13 @@
 
 default: run
 
-tests: unit-tests
+test: unit-tests
 
 unit-tests:
 	go fmt ./...
 	go test -vet all -shuffle=on ./...
 
-build: tests
+build: test
 	go build -o wordle ./cmd/wordle
 
 mod:

@@ -14,7 +14,6 @@ func TestWhenFirstGuessIsCorrect(t *testing.T) {
 
 	err := run(secret, nil, &stdout, stdin)
 
-
 	assert.Nil(t, err)
 	assert.Equal(t, "Correct\n", stdout.String())
 }
@@ -25,7 +24,6 @@ func TestWhenFirstGuessIsWrong(t *testing.T) {
 	stdin := strings.NewReader("guess")
 
 	err := run(secret, nil, &stdout, stdin)
-
 
 	assert.Nil(t, err)
 	assert.Equal(t, "Wrong, the word was cater\n", stdout.String())

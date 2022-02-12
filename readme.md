@@ -2,4 +2,4 @@
 
 Run CLI locally: `make`
 
-Run tests: `make tests`
+Run tests: `make test`
