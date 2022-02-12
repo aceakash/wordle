@@ -27,13 +27,19 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 	}
 
 	var guess string
-	_, err = fmt.Fscanln(in, &guess)
-	if err != nil {
-		return err
-	}
 
-	res := game.Guess(guess)
-	return renderClues(res.Clues, out)
+	for i := 0; i < 6; i++ {
+		_, err = fmt.Fscanln(in, &guess)
+		if err != nil {
+			return err
+		}
+		res := game.Guess(guess)
+		err = renderClues(res.Clues, out)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func renderClues(clues [5]internal.Clue, stdout io.Writer) error {
