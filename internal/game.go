@@ -44,6 +44,8 @@ func (g *Game) Guess(guess string) GuessResult {
 		}
 		if guess[i] == g.secret[i] {
 			clue.Result = Correct
+		} else if strings.ContainsRune(g.secret, rune(guess[i])) {
+			clue.Result = Misplaced
 		} else {
 			clue.Result = Wrong
 		}
