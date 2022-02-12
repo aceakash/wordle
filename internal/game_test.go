@@ -153,4 +153,15 @@ func TestClueOnlyGivenOnce_IfLetterInSecretOnce(t *testing.T) {
 		expectedLastLetter := i.Clue{Letter: 'E', Result: i.Correct}
 		assert.Equal(t, expectedLastLetter, res.Clues[4])
 	})
+
+	t.Run("guess TRYST for secret ZESTY should only show one correct T", func(t *testing.T) {
+		g, _ := i.NewGame("ZESTY", StubAllowedGuessChecker{})
+		res, _ := g.Guess("TRYST")
+
+		expectedFirstLetter := i.Clue{Letter: 'T', Result: i.Misplaced}
+		assert.Equal(t, expectedFirstLetter, res.Clues[0])
+
+		expectedLastLetter := i.Clue{Letter: 'T', Result: i.Wrong}
+		assert.Equal(t, expectedLastLetter, res.Clues[4])
+	})
 }

@@ -35,6 +35,10 @@ type Clue struct {
 	Result ClueResult
 }
 
+func (c Clue) LetterStr() string {
+	return string(rune(c.Letter))
+}
+
 type GuessResult struct {
 	Clues [5]Clue
 }
@@ -69,30 +73,16 @@ func (g *Game) Guess(guess string) (GuessResult, error) {
 			res.Clues[i].Result = Correct
 			continue
 		}
-		for j, c := range res.Clues {
-			if c.Result != Wrong {
+		for j := 0; j < 5; j++ {
+			if res.Clues[j].Result != Wrong {
 				continue
 			}
-			if c.Letter == rune(g.secret[i]) {
+			if res.Clues[j].Letter == rune(g.secret[i]) {
 				res.Clues[j].Result = Misplaced
-				continue
+				break
 			}
 		}
 	}
 
-	//for i := 0; i < 5; i++ {
-	//	clue := Clue{
-	//		Letter: rune(guess[i]),
-	//		Result: Wrong,
-	//	}
-	//	if guess[i] == g.secret[i] {
-	//		clue.Result = Correct
-	//	} else if strings.ContainsRune(g.secret, rune(guess[i])) {
-	//		clue.Result = Misplaced
-	//	} else {
-	//		clue.Result = Wrong
-	//	}
-	//	res.Clues[i] = clue
-	//}
 	return res, nil
 }

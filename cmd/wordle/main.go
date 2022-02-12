@@ -29,10 +29,7 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 		return err
 	}
 
-	_, err = fmt.Fprintf(out, "")
-	if err != nil {
-		panic(err)
-	}
+	fmt.Fprintf(out, "")
 	if secret == "" {
 		secret, err = secretPicker.PickSecret()
 		if err != nil {
@@ -50,14 +47,8 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 	solved := false
 	guessesUsed := 0
 	for guessesUsed < maxGuesses {
-		_, err := fmt.Fprintf(out, "\nGuess (%d of %d) ? ", guessesUsed+1, maxGuesses)
-		if err != nil {
-			return err
-		}
-		_, err = fmt.Fscanln(in, &guess)
-		if err != nil {
-			return err
-		}
+		fmt.Fprintf(out, "\nGuess (%d of %d) ? ", guessesUsed+1, maxGuesses)
+		fmt.Fscanln(in, &guess)
 		res, err := game.Guess(guess)
 		if err != nil {
 			fmt.Fprintf(out, "\n%s\n", err.Error())
@@ -74,10 +65,7 @@ func run(secret string, otherArgs []string, out io.Writer, in io.Reader) error {
 		guessesUsed++
 	}
 	if !solved {
-		_, err := fmt.Fprintf(out, "\nThe word was %s\n", strings.ToUpper(secret))
-		if err != nil {
-			return err
-		}
+		fmt.Fprintf(out, "\nThe word was %s\n", strings.ToUpper(secret))
 	}
 	fmt.Fprintln(out, "")
 	return nil
@@ -90,17 +78,11 @@ func renderClues(clues [5]internal.Clue, stdout io.Writer) error {
 	for i := 0; i < 5; i++ {
 		format := " %c "
 		if clues[i].Result == internal.Correct {
-			_, err := correct.Fprintf(stdout, format, clues[i].Letter)
-			if err != nil {
-				return err
-			}
+			correct.Fprintf(stdout, format, clues[i].Letter)
 			continue
 		}
 		if clues[i].Result == internal.Misplaced {
-			_, err := misplaced.Fprintf(stdout, format, clues[i].Letter)
-			if err != nil {
-				return err
-			}
+			misplaced.Fprintf(stdout, format, clues[i].Letter)
 			continue
 		}
 		_, err := incorrect.Fprintf(stdout, format, clues[i].Letter)
@@ -108,9 +90,6 @@ func renderClues(clues [5]internal.Clue, stdout io.Writer) error {
 			return err
 		}
 	}
-	_, err := fmt.Fprintln(stdout, "")
-	if err != nil {
-		return err
-	}
+	fmt.Fprintln(stdout, "")
 	return nil
 }
