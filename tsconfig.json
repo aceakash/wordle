@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "types": ["bun-types"]
+    "types": ["bun-types", "./misc.d.ts"],
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

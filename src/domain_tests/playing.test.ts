@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { Clue, Game } from "../domain/game";
+import { Game } from "../domain/game";
 import { fail } from "assert";
 
 test("Getting the word correct in the first guess marks the game as solved", () => {
